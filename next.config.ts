@@ -1,7 +1,10 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  /* config options here */
+module.exports = {
+  async rewrites() {
+    return [
+      {
+        source: "/api/audio/:path*",
+        destination: "https://equran.nos.wjv-1.neo.id/audio-partial/:path*",
+      },
+    ];
+  },
 };
-
-export default nextConfig;

@@ -1,111 +1,207 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import BackButton from "@/components/back-button"
-import quranData from "@/data/quran.json"
-import { Play, Pause, RotateCcw } from "lucide-react"
+import { Play, Pause, RotateCcw, Volume2, VolumeX } from "lucide-react"
 import AudioVisualizer from "@/components/audio-visualizer"
+import { fetchRandomSurahs, generateQuizData } from "@/services/quran-api"
+
+interface QuizOption {
+  id: string
+  surahNumber: number
+  surahName: string
+  verseNumber: number
+}
+
+interface QuizQuestion {
+  question: {
+    id: string
+    surahNumber: number
+    surahName: string
+    verseNumber: number
+    arabic: string
+    translation: string
+    audioUrl: string
+  }
+  options: QuizOption[]
+}
 
 export default function HafalanPage() {
-  const [currentQuizIndex, setCurrentQuizIndex] = useState(0)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [quiz, setQuiz] = useState<QuizQuestion[]>([])
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null)
+  const audioRef = useRef<HTMLAudioElement | null>(null)
   const [isPlaying, setIsPlaying] = useState(false)
-  const [currentTime, setCurrentTime] = useState(0)
-  const [duration, setDuration] = useState(0)
-  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
+  const [isMuted, setIsMuted] = useState(false)
+  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null)
   const [showFeedback, setShowFeedback] = useState(false)
   const [isCorrect, setIsCorrect] = useState(false)
   const [quizCompleted, setQuizCompleted] = useState(false)
   const [score, setScore] = useState(0)
-  const [shuffledVerses, setShuffledVerses] = useState<typeof quranData.verses>([])
+  const [reciterId, setReciterId] = useState("05") // Default to Misyari Rasyid Al-Afasi
+  const [difficulty, setDifficulty] = useState<"easy" | "medium" | "hard">("medium")
+  const [audioError, setAudioError] = useState<string | null>(null)
 
-  // Initialize quiz with shuffled verses
+  // Fetch quiz data on component mount
   useEffect(() => {
-    const shuffled = [...quranData.verses].sort(() => Math.random() - 0.5)
-    setShuffledVerses(shuffled)
+    loadQuiz()
+  }, [reciterId, difficulty])
 
-    // Preload first audio
-    if (shuffled.length > 0) {
-      const newAudio = new Audio(shuffled[0].audioSrc)
-      newAudio.addEventListener("timeupdate", updateProgress)
-      newAudio.addEventListener("loadedmetadata", setAudioData)
-      newAudio.addEventListener("ended", handleAudioEnd)
-      setAudio(newAudio)
-    }
-  }, [])
+  async function loadQuiz() {
+    try {
+      setLoading(true)
+      setError(null)
+      setAudioError(null)
 
-  useEffect(() => {
-    // Clean up previous audio
-    if (audio) {
-      audio.pause()
-      audio.removeEventListener("timeupdate", updateProgress)
-      audio.removeEventListener("loadedmetadata", setAudioData)
-      audio.removeEventListener("ended", handleAudioEnd)
-    }
+      // Determine number of surahs based on difficulty
+      const surahCount = difficulty === "easy" ? 3 : difficulty === "medium" ? 5 : 8
 
-    if (currentQuizIndex < shuffledVerses.length) {
-      // Create new audio element for current quiz
-      const newAudio = new Audio(shuffledVerses[currentQuizIndex].audioSrc)
-      newAudio.addEventListener("timeupdate", updateProgress)
-      newAudio.addEventListener("loadedmetadata", setAudioData)
-      newAudio.addEventListener("ended", handleAudioEnd)
-      setAudio(newAudio)
-    }
+      // Fetch random surahs from the API
+      const surahs = await fetchRandomSurahs(surahCount)
 
-    return () => {
-      if (audio) {
-        audio.pause()
-        audio.removeEventListener("timeupdate", updateProgress)
-        audio.removeEventListener("loadedmetadata", setAudioData)
-        audio.removeEventListener("ended", handleAudioEnd)
-      }
-    }
-  }, [currentQuizIndex, shuffledVerses])
+      // Generate quiz questions with options
+      const questionCount = difficulty === "easy" ? 5 : difficulty === "medium" ? 8 : 12
+      const optionsCount = difficulty === "easy" ? 3 : difficulty === "medium" ? 4 : 5
 
-  const updateProgress = () => {
-    if (audio) {
-      setCurrentTime(audio.currentTime)
+      // Use the non-async version of generateQuizData
+      const quizData = generateQuizData(surahs, questionCount, optionsCount, reciterId)
+      setQuiz(quizData)
+
+      setCurrentQuestionIndex(0)
+      setSelectedAnswer(null)
+      setShowFeedback(false)
+      setQuizCompleted(false)
+      setScore(0)
+      setLoading(false)
+    } catch (err) {
+      setError("Failed to load quiz data. Please try again later.")
+      setLoading(false)
+      console.error("Error loading quiz:", err)
     }
   }
 
-  const setAudioData = () => {
-    if (audio) {
-      setDuration(audio.duration)
-    }
+  // Set up audio when quiz items or current index changes
+// Set up audio when quiz items or current index changes
+useEffect(() => {
+  // Clean up previous audio
+  if (audioRef.current) {
+    audioRef.current.pause();
+    audioRef.current.removeEventListener("ended", handleAudioEnd);
+    audioRef.current.removeEventListener("error", handleAudioError);
   }
+
+  if (quiz.length > 0 && currentQuestionIndex < quiz.length) {
+    setAudioError(null);
+
+    // Ambil URL audio langsung dari quiz[currentQuestionIndex]
+    const audioUrl = quiz[currentQuestionIndex]?.question.audioUrl;
+    if (!audioUrl) return;
+
+    console.log("Loading audio from:", audioUrl);
+
+    const newAudio = new Audio(audioUrl);
+    newAudio.crossOrigin = "anonymous"; 
+    newAudio.addEventListener("ended", handleAudioEnd);
+    newAudio.addEventListener("error", handleAudioError);
+
+    // Preload the audio
+    newAudio.preload = "auto";
+
+    // Set volume
+    newAudio.volume = isMuted ? 0 : 1;
+
+    setAudio(newAudio);
+    audioRef.current = newAudio;
+
+    // Try to load the audio
+    newAudio.load();
+  }
+
+  return () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.removeEventListener("ended", handleAudioEnd);
+      audioRef.current.removeEventListener("error", handleAudioError);
+    }
+  };
+}, [quiz, currentQuestionIndex, isMuted]);
+
 
   const handleAudioEnd = () => {
+    console.log("Audio playback ended")
     setIsPlaying(false)
-    if (audio) {
-      audio.currentTime = 0
+    if (audioRef.current) {
+      audioRef.current.currentTime = 0
     }
+  }
+
+  const handleAudioError = (e: Event) => {
+    console.error("Audio error:", e)
+    setAudioError("Failed to load audio. Please try another question or reciter.")
+    setIsPlaying(false)
   }
 
   const togglePlayPause = () => {
-    if (audio) {
+    if (audioRef.current) {
       if (isPlaying) {
-        audio.pause()
+        audioRef.current.pause()
+        setIsPlaying(false)
+        console.log("Audio paused")
       } else {
-        audio.play()
+        // Create a user interaction context for autoplay
+        const playPromise = audioRef.current.play()
+
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => {
+              setIsPlaying(true)
+              console.log("Audio playing")
+            })
+            .catch((err) => {
+              console.error("Play failed:", err)
+              setAudioError("Couldn't play audio. Try clicking the play button again.")
+            })
+        }
       }
-      setIsPlaying(!isPlaying)
+    }
+  }
+
+  const toggleMute = () => {
+    if (audioRef.current) {
+      const newMuteState = !isMuted
+      audioRef.current.muted = newMuteState
+      setIsMuted(newMuteState)
     }
   }
 
   const restartAudio = () => {
-    if (audio) {
-      audio.currentTime = 0
+    if (audioRef.current) {
+      audioRef.current.currentTime = 0
       if (!isPlaying) {
-        audio.play()
-        setIsPlaying(true)
+        const playPromise = audioRef.current.play()
+
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => {
+              setIsPlaying(true)
+              console.log("Audio restarted and playing")
+            })
+            .catch((err) => {
+              console.error("Restart failed:", err)
+              setAudioError("Couldn't restart audio. Try clicking the play button.")
+            })
+        }
       }
     }
   }
 
-  const checkAnswer = (verseId: number) => {
-    setSelectedAnswer(verseId)
-    const isAnswerCorrect = verseId === shuffledVerses[currentQuizIndex].id
+  const checkAnswer = (optionId: string) => {
+    setSelectedAnswer(optionId)
+    const correctId = quiz[currentQuestionIndex].question.id
+    const isAnswerCorrect = optionId === correctId
     setIsCorrect(isAnswerCorrect)
     setShowFeedback(true)
 
@@ -115,8 +211,8 @@ export default function HafalanPage() {
 
     // Move to next question after a delay
     setTimeout(() => {
-      if (currentQuizIndex < shuffledVerses.length - 1) {
-        setCurrentQuizIndex((prev) => prev + 1)
+      if (currentQuestionIndex < quiz.length - 1) {
+        setCurrentQuestionIndex((prev) => prev + 1)
         setSelectedAnswer(null)
         setShowFeedback(false)
       } else {
@@ -126,13 +222,42 @@ export default function HafalanPage() {
   }
 
   const resetQuiz = () => {
-    const shuffled = [...quranData.verses].sort(() => Math.random() - 0.5)
-    setShuffledVerses(shuffled)
-    setCurrentQuizIndex(0)
-    setSelectedAnswer(null)
-    setShowFeedback(false)
-    setQuizCompleted(false)
-    setScore(0)
+    loadQuiz()
+  }
+
+  const changeReciter = (newReciterId: string) => {
+    setReciterId(newReciterId)
+    // The useEffect will reload the quiz with the new reciter
+  }
+
+  const changeDifficulty = (newDifficulty: "easy" | "medium" | "hard") => {
+    setDifficulty(newDifficulty)
+    // The useEffect will reload the quiz with the new difficulty
+  }
+
+  if (loading) {
+    return (
+      <div className="max-w-md mx-auto bg-white min-h-screen p-4 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-lg">Loading quiz data...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="max-w-md mx-auto bg-white min-h-screen p-4 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-red-600 mb-4">⚠️</div>
+          <p className="text-lg text-red-600 mb-4">{error}</p>
+          <button onClick={() => loadQuiz()} className="bg-blue-600 text-white py-2 px-4 rounded-md">
+            Try Again
+          </button>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -147,29 +272,89 @@ export default function HafalanPage() {
         <div className="text-center py-8">
           <h2 className="text-2xl font-bold mb-4">Quiz Completed!</h2>
           <p className="text-lg mb-6">
-            Your score: {score} / {shuffledVerses.length}
+            Your score: {score} / {quiz.length}
           </p>
+
+          <div className="mb-6">
+            <p className="mb-2 font-medium">Difficulty:</p>
+            <div className="flex justify-center gap-2 mb-4">
+              <button
+                onClick={() => changeDifficulty("easy")}
+                className={`px-3 py-1 rounded-md ${difficulty === "easy" ? "bg-blue-600 text-white" : "bg-blue-100 text-blue-800"}`}
+              >
+                Easy
+              </button>
+              <button
+                onClick={() => changeDifficulty("medium")}
+                className={`px-3 py-1 rounded-md ${difficulty === "medium" ? "bg-blue-600 text-white" : "bg-blue-100 text-blue-800"}`}
+              >
+                Medium
+              </button>
+              <button
+                onClick={() => changeDifficulty("hard")}
+                className={`px-3 py-1 rounded-md ${difficulty === "hard" ? "bg-blue-600 text-white" : "bg-blue-100 text-blue-800"}`}
+              >
+                Hard
+              </button>
+            </div>
+
+            <p className="mb-2 font-medium">Reciter:</p>
+            <div className="flex flex-wrap justify-center gap-2">
+              <button
+                onClick={() => changeReciter("01")}
+                className={`px-3 py-1 rounded-md ${reciterId === "01" ? "bg-blue-600 text-white" : "bg-blue-100 text-blue-800"}`}
+              >
+                Abdullah Al-Juhany
+              </button>
+              <button
+                onClick={() => changeReciter("02")}
+                className={`px-3 py-1 rounded-md ${reciterId === "02" ? "bg-blue-600 text-white" : "bg-blue-100 text-blue-800"}`}
+              >
+                Abdul Muhsin Al-Qasim
+              </button>
+              <button
+                onClick={() => changeReciter("05")}
+                className={`px-3 py-1 rounded-md ${reciterId === "05" ? "bg-blue-600 text-white" : "bg-blue-100 text-blue-800"}`}
+              >
+                Misyari Rasyid Al-Afasi
+              </button>
+            </div>
+          </div>
+
           <button
             onClick={resetQuiz}
             className="bg-blue-600 text-white py-3 px-6 rounded-md hover:bg-blue-700 transition-colors"
           >
-            Try Again
+            New Quiz
           </button>
         </div>
       ) : (
         <>
           <div className="mb-4 text-center">
             <p className="text-sm text-gray-600">
-              Question {currentQuizIndex + 1} of {shuffledVerses.length}
+              Question {currentQuestionIndex + 1} of {quiz.length}
             </p>
             <p className="text-lg font-medium">Listen to the audio and select the correct surah and verse</p>
           </div>
 
-          <div className="bg-blue-600 rounded-lg p-4 mb-6">
+          <div className="bg-blue-600 rounded-lg p-4 mb-2">
             <div className="h-24 w-full">
-              <AudioVisualizer audio={audio} isPlaying={isPlaying} />
+              <AudioVisualizer audio={audioRef.current} isPlaying={isPlaying} />
             </div>
           </div>
+
+          {/* Add an actual audio element for debugging */}
+          <audio
+            src={quiz[currentQuestionIndex]?.question.audioUrl}
+            controls
+            className="w-full mb-4"
+            onPlay={() => setIsPlaying(true)}
+            onPause={() => setIsPlaying(false)}
+            onEnded={handleAudioEnd}
+            onError={(e) => handleAudioError(e.nativeEvent)}
+          />
+
+          {audioError && <div className="bg-yellow-100 text-yellow-800 p-3 rounded-md mb-4 text-sm">{audioError}</div>}
 
           <div className="flex justify-center space-x-4 mb-8">
             <button
@@ -189,25 +374,11 @@ export default function HafalanPage() {
             </button>
 
             <button
-              onClick={() => audio && (audio.currentTime = Math.min(audio.duration, audio.currentTime + 10))}
+              onClick={toggleMute}
               className="bg-blue-100 rounded-full p-4 hover:bg-blue-200 transition-colors"
-              aria-label="Forward"
+              aria-label={isMuted ? "Unmute" : "Mute"}
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="text-blue-800"
-              >
-                <polygon points="5 4 15 12 5 20 5 4"></polygon>
-                <line x1="19" y1="5" x2="19" y2="19"></line>
-              </svg>
+              {isMuted ? <VolumeX className="w-5 h-5 text-blue-800" /> : <Volume2 className="w-5 h-5 text-blue-800" />}
             </button>
           </div>
 
@@ -215,28 +386,32 @@ export default function HafalanPage() {
             <div
               className={`p-4 mb-6 rounded-md text-center ${isCorrect ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}
             >
-              {isCorrect ? "Correct!" : "Incorrect!"} This is {shuffledVerses[currentQuizIndex].surah} ayat{" "}
-              {shuffledVerses[currentQuizIndex].ayat}
+              {isCorrect ? "Correct!" : "Incorrect!"} This is {quiz[currentQuestionIndex].question.surahName} ayat{" "}
+              {quiz[currentQuestionIndex].question.verseNumber}
+              <p className="text-right mt-2 text-lg" dir="rtl">
+                {quiz[currentQuestionIndex].question.arabic}
+              </p>
+              <p className="text-left mt-1 text-sm">{quiz[currentQuestionIndex].question.translation}</p>
             </div>
           )}
 
           <div className="space-y-3">
-            {quranData.verses.map((verse) => (
+            {quiz[currentQuestionIndex]?.options.map((option) => (
               <button
-                key={verse.id}
-                onClick={() => !showFeedback && checkAnswer(verse.id)}
+                key={option.id}
+                onClick={() => !showFeedback && checkAnswer(option.id)}
                 disabled={showFeedback}
                 className={`w-full text-center py-3 px-4 rounded-md border transition-colors ${
-                  selectedAnswer === verse.id
+                  selectedAnswer === option.id
                     ? isCorrect
                       ? "bg-green-100 border-green-600 text-green-800"
                       : "bg-red-100 border-red-600 text-red-800"
-                    : showFeedback && verse.id === shuffledVerses[currentQuizIndex].id
+                    : showFeedback && option.id === quiz[currentQuestionIndex].question.id
                       ? "bg-green-100 border-green-600 text-green-800"
                       : "border-gray-300 hover:bg-blue-50"
                 } ${showFeedback ? "cursor-default" : "cursor-pointer"}`}
               >
-                {verse.surah} ayat {verse.ayat}
+                {option.surahName} ayat {option.verseNumber}
               </button>
             ))}
           </div>

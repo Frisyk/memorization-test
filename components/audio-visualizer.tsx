@@ -9,7 +9,7 @@ interface AudioVisualizerProps {
 
 export default function AudioVisualizer({ audio, isPlaying }: AudioVisualizerProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const animationRef = useRef<number>()
+  const animationRef = useRef<number>(null)
   const audioContextRef = useRef<AudioContext | null>(null)
   const analyserRef = useRef<AnalyserNode | null>(null)
   const sourceRef = useRef<MediaElementAudioSourceNode | null>(null)
@@ -26,6 +26,7 @@ export default function AudioVisualizer({ audio, isPlaying }: AudioVisualizerPro
     if (!audio) return
 
     // Create new audio context
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)()
     audioContextRef.current = audioContext
 

@@ -31,6 +31,7 @@ export default function HafalanPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [quiz, setQuiz] = useState<QuizQuestion[]>([])
+  const [quizStarted, setQuizStarted] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null)
   const audioRef = useRef<HTMLAudioElement | null>(null)
@@ -84,7 +85,7 @@ export default function HafalanPage() {
   }
 
   // Set up audio when quiz items or current index changes
-// Set up audio when quiz items or current index changes
+// Updated audio loading logic
 useEffect(() => {
   // Clean up previous audio
   if (audioRef.current) {
@@ -96,14 +97,16 @@ useEffect(() => {
   if (quiz.length > 0 && currentQuestionIndex < quiz.length) {
     setAudioError(null);
 
-    // Ambil URL audio langsung dari quiz[currentQuestionIndex]
-    const audioUrl = quiz[currentQuestionIndex]?.question.audioUrl;
-    if (!audioUrl) return;
+    // Get original audio URL
+    const originalAudioUrl = quiz[currentQuestionIndex]?.question.audioUrl;
+    if (!originalAudioUrl) return;
 
-    console.log("Loading audio from:", audioUrl);
+    // Create proxied URL
+    const audioUrl = `/api/audio?url=${encodeURIComponent(originalAudioUrl)}`;
+    console.log("Loading audio from proxy:", audioUrl);
 
     const newAudio = new Audio(audioUrl);
-    newAudio.crossOrigin = "anonymous"; 
+    // No need for crossOrigin since we're using our own domain now
     newAudio.addEventListener("ended", handleAudioEnd);
     newAudio.addEventListener("error", handleAudioError);
 
@@ -120,6 +123,7 @@ useEffect(() => {
     newAudio.load();
   }
 
+  // Cleanup function
   return () => {
     if (audioRef.current) {
       audioRef.current.pause();
@@ -268,155 +272,161 @@ useEffect(() => {
         <div className="w-6"></div> {/* Spacer for alignment */}
       </div>
 
-      {quizCompleted ? (
-        <div className="text-center py-8">
-          <h2 className="text-2xl font-bold mb-4">Quiz Completed!</h2>
-          <p className="text-lg mb-6">
-            Your score: {score} / {quiz.length}
-          </p>
+      {!quizStarted ? (
+  // Tampilan awal sebelum quiz dimulai
+  <div className="text-center py-8">
+    <h2 className="text-2xl font-bold mb-4">Welcome to the Quiz!</h2>
+    <p className="text-lg mb-6">Choose difficulty and reciter before starting.</p>
 
-          <div className="mb-6">
-            <p className="mb-2 font-medium">Difficulty:</p>
-            <div className="flex justify-center gap-2 mb-4">
-              <button
-                onClick={() => changeDifficulty("easy")}
-                className={`px-3 py-1 rounded-md ${difficulty === "easy" ? "bg-blue-600 text-white" : "bg-blue-100 text-blue-800"}`}
-              >
-                Easy
-              </button>
-              <button
-                onClick={() => changeDifficulty("medium")}
-                className={`px-3 py-1 rounded-md ${difficulty === "medium" ? "bg-blue-600 text-white" : "bg-blue-100 text-blue-800"}`}
-              >
-                Medium
-              </button>
-              <button
-                onClick={() => changeDifficulty("hard")}
-                className={`px-3 py-1 rounded-md ${difficulty === "hard" ? "bg-blue-600 text-white" : "bg-blue-100 text-blue-800"}`}
-              >
-                Hard
-              </button>
-            </div>
+    <div className="mb-6">
+      <p className="mb-2 font-medium">Difficulty:</p>
+      <div className="flex justify-center gap-2 mb-4">
+        <button
+          onClick={() => changeDifficulty("easy")}
+          className={`px-3 py-1 rounded-md ${difficulty === "easy" ? "bg-blue-600 text-white" : "bg-blue-100 text-blue-800"}`}
+        >
+          Easy
+        </button>
+        <button
+          onClick={() => changeDifficulty("medium")}
+          className={`px-3 py-1 rounded-md ${difficulty === "medium" ? "bg-blue-600 text-white" : "bg-blue-100 text-blue-800"}`}
+        >
+          Medium
+        </button>
+        <button
+          onClick={() => changeDifficulty("hard")}
+          className={`px-3 py-1 rounded-md ${difficulty === "hard" ? "bg-blue-600 text-white" : "bg-blue-100 text-blue-800"}`}
+        >
+          Hard
+        </button>
+      </div>
 
-            <p className="mb-2 font-medium">Reciter:</p>
-            <div className="flex flex-wrap justify-center gap-2">
-              <button
-                onClick={() => changeReciter("01")}
-                className={`px-3 py-1 rounded-md ${reciterId === "01" ? "bg-blue-600 text-white" : "bg-blue-100 text-blue-800"}`}
-              >
-                Abdullah Al-Juhany
-              </button>
-              <button
-                onClick={() => changeReciter("02")}
-                className={`px-3 py-1 rounded-md ${reciterId === "02" ? "bg-blue-600 text-white" : "bg-blue-100 text-blue-800"}`}
-              >
-                Abdul Muhsin Al-Qasim
-              </button>
-              <button
-                onClick={() => changeReciter("05")}
-                className={`px-3 py-1 rounded-md ${reciterId === "05" ? "bg-blue-600 text-white" : "bg-blue-100 text-blue-800"}`}
-              >
-                Misyari Rasyid Al-Afasi
-              </button>
-            </div>
-          </div>
+      <p className="mb-2 font-medium">Reciter:</p>
+      <div className="flex flex-wrap justify-center gap-2">
+        <button
+          onClick={() => changeReciter("01")}
+          className={`px-3 py-1 rounded-md ${reciterId === "01" ? "bg-blue-600 text-white" : "bg-blue-100 text-blue-800"}`}
+        >
+          Abdullah Al-Juhany
+        </button>
+        <button
+          onClick={() => changeReciter("02")}
+          className={`px-3 py-1 rounded-md ${reciterId === "02" ? "bg-blue-600 text-white" : "bg-blue-100 text-blue-800"}`}
+        >
+          Abdul Muhsin Al-Qasim
+        </button>
+        <button
+          onClick={() => changeReciter("05")}
+          className={`px-3 py-1 rounded-md ${reciterId === "05" ? "bg-blue-600 text-white" : "bg-blue-100 text-blue-800"}`}
+        >
+          Misyari Rasyid Al-Afasi
+        </button>
+      </div>
+    </div>
 
-          <button
-            onClick={resetQuiz}
-            className="bg-blue-600 text-white py-3 px-6 rounded-md hover:bg-blue-700 transition-colors"
-          >
-            New Quiz
-          </button>
-        </div>
-      ) : (
-        <>
-          <div className="mb-4 text-center">
-            <p className="text-sm text-gray-600">
-              Question {currentQuestionIndex + 1} of {quiz.length}
-            </p>
-            <p className="text-lg font-medium">Listen to the audio and select the correct surah and verse</p>
-          </div>
+    <button
+      onClick={() => setQuizStarted(true)}
+      className="bg-blue-600 text-white py-3 px-6 rounded-md hover:bg-blue-700 transition-colors"
+    >
+      Start Quiz
+    </button>
+  </div>
+) : quizCompleted ? (
+  // Tampilan setelah quiz selesai
+  <div className="text-center py-8">
+    <h2 className="text-2xl font-bold mb-4">Quiz Completed!</h2>
+    <p className="text-lg mb-6">Your score: {score} / {quiz.length}</p>
 
-          <div className="bg-blue-600 rounded-lg p-4 mb-2">
-            <div className="h-24 w-full">
-              <AudioVisualizer audio={audioRef.current} isPlaying={isPlaying} />
-            </div>
-          </div>
+    <button
+      onClick={() => {
+        resetQuiz();
+        setQuizStarted(false);
+      }}
+      className="bg-blue-600 text-white py-3 px-6 rounded-md hover:bg-blue-700 transition-colors"
+    >
+      New Quiz
+    </button>
+  </div>
+) : (
+  // Tampilan saat quiz berlangsung
+  <>
+    <div className="mb-4 text-center">
+      <p className="text-sm text-gray-600">
+        Question {currentQuestionIndex + 1} of {quiz.length}
+      </p>
+      <p className="text-lg font-medium">Listen to the audio and select the correct surah and verse</p>
+    </div>
 
-          {/* Add an actual audio element for debugging */}
-          <audio
-            src={quiz[currentQuestionIndex]?.question.audioUrl}
-            controls
-            className="w-full mb-4"
-            onPlay={() => setIsPlaying(true)}
-            onPause={() => setIsPlaying(false)}
-            onEnded={handleAudioEnd}
-            onError={(e) => handleAudioError(e.nativeEvent)}
-          />
+    <div className="bg-blue-600 rounded-lg p-4 mb-2">
+      <div className="h-24 w-full">
+        <AudioVisualizer audio={audioRef.current} isPlaying={isPlaying} />
+      </div>
+    </div>
 
-          {audioError && <div className="bg-yellow-100 text-yellow-800 p-3 rounded-md mb-4 text-sm">{audioError}</div>}
+    {audioError && <div className="bg-yellow-100 text-yellow-800 p-3 rounded-md mb-4 text-sm">{audioError}</div>}
 
-          <div className="flex justify-center space-x-4 mb-8">
-            <button
-              onClick={restartAudio}
-              className="bg-blue-100 rounded-full p-4 hover:bg-blue-200 transition-colors"
-              aria-label="Restart"
-            >
-              <RotateCcw className="w-5 h-5 text-blue-800" />
-            </button>
+    <div className="flex justify-center space-x-4 mb-8">
+      <button
+        onClick={restartAudio}
+        className="bg-blue-100 rounded-full p-4 hover:bg-blue-200 transition-colors"
+        aria-label="Restart"
+      >
+        <RotateCcw className="w-5 h-5 text-blue-800" />
+      </button>
 
-            <button
-              onClick={togglePlayPause}
-              className="bg-blue-100 rounded-full p-4 hover:bg-blue-200 transition-colors"
-              aria-label={isPlaying ? "Pause" : "Play"}
-            >
-              {isPlaying ? <Pause className="w-5 h-5 text-blue-800" /> : <Play className="w-5 h-5 text-blue-800" />}
-            </button>
+      <button
+        onClick={togglePlayPause}
+        className="bg-blue-100 rounded-full p-4 hover:bg-blue-200 transition-colors"
+        aria-label={isPlaying ? "Pause" : "Play"}
+      >
+        {isPlaying ? <Pause className="w-5 h-5 text-blue-800" /> : <Play className="w-5 h-5 text-blue-800" />}
+      </button>
 
-            <button
-              onClick={toggleMute}
-              className="bg-blue-100 rounded-full p-4 hover:bg-blue-200 transition-colors"
-              aria-label={isMuted ? "Unmute" : "Mute"}
-            >
-              {isMuted ? <VolumeX className="w-5 h-5 text-blue-800" /> : <Volume2 className="w-5 h-5 text-blue-800" />}
-            </button>
-          </div>
+      <button
+        onClick={toggleMute}
+        className="bg-blue-100 rounded-full p-4 hover:bg-blue-200 transition-colors"
+        aria-label={isMuted ? "Unmute" : "Mute"}
+      >
+        {isMuted ? <VolumeX className="w-5 h-5 text-blue-800" /> : <Volume2 className="w-5 h-5 text-blue-800" />}
+      </button>
+    </div>
 
-          {showFeedback && (
-            <div
-              className={`p-4 mb-6 rounded-md text-center ${isCorrect ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}
-            >
-              {isCorrect ? "Correct!" : "Incorrect!"} This is {quiz[currentQuestionIndex].question.surahName} ayat{" "}
-              {quiz[currentQuestionIndex].question.verseNumber}
-              <p className="text-right mt-2 text-lg" dir="rtl">
-                {quiz[currentQuestionIndex].question.arabic}
-              </p>
-              <p className="text-left mt-1 text-sm">{quiz[currentQuestionIndex].question.translation}</p>
-            </div>
-          )}
+    {showFeedback && (
+      <div
+        className={`p-4 mb-6 rounded-md text-center ${isCorrect ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}
+      >
+        {isCorrect ? "Correct!" : "Incorrect!"} This is {quiz[currentQuestionIndex].question.surahName} ayat{" "}
+        {quiz[currentQuestionIndex].question.verseNumber}
+        <p className="text-right mt-2 text-3xl" dir="rtl">
+          {quiz[currentQuestionIndex].question.arabic}
+        </p>
+        <p className="text-left mt-1 text-sm">{quiz[currentQuestionIndex].question.translation}</p>
+      </div>
+    )}
 
-          <div className="space-y-3">
-            {quiz[currentQuestionIndex]?.options.map((option) => (
-              <button
-                key={option.id}
-                onClick={() => !showFeedback && checkAnswer(option.id)}
-                disabled={showFeedback}
-                className={`w-full text-center py-3 px-4 rounded-md border transition-colors ${
-                  selectedAnswer === option.id
-                    ? isCorrect
-                      ? "bg-green-100 border-green-600 text-green-800"
-                      : "bg-red-100 border-red-600 text-red-800"
-                    : showFeedback && option.id === quiz[currentQuestionIndex].question.id
-                      ? "bg-green-100 border-green-600 text-green-800"
-                      : "border-gray-300 hover:bg-blue-50"
-                } ${showFeedback ? "cursor-default" : "cursor-pointer"}`}
-              >
-                {option.surahName} ayat {option.verseNumber}
-              </button>
-            ))}
-          </div>
-        </>
-      )}
+    <div className="space-y-3">
+      {quiz[currentQuestionIndex]?.options.map((option) => (
+        <button
+          key={option.id}
+          onClick={() => !showFeedback && checkAnswer(option.id)}
+          disabled={showFeedback}
+          className={`w-full text-center py-3 px-4 rounded-md border transition-colors ${
+            selectedAnswer === option.id
+              ? isCorrect
+                ? "bg-green-100 border-green-600 text-green-800"
+                : "bg-red-100 border-red-600 text-red-800"
+              : showFeedback && option.id === quiz[currentQuestionIndex].question.id
+                ? "bg-green-100 border-green-600 text-green-800"
+                : "border-gray-300 hover:bg-blue-50"
+          } ${showFeedback ? "cursor-default" : "cursor-pointer"}`}
+        >
+          {option.surahName} ayat {option.verseNumber}
+        </button>
+      ))}
+    </div>
+  </>
+)}
+
     </div>
   )
 }

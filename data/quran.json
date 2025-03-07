@@ -1,0 +1,53 @@
+{
+  "verses": [
+    {
+      "id": 1,
+      "surah": "Al Insyirah",
+      "ayat": 3,
+      "arabic": "الَّذِي أَنْقَضَ ظَهْرَكَ",
+      "translation": "Yang memberatkan punggungmu",
+      "audioSrc": "/audio/al-insyirah-3.mp3"
+    },
+    {
+      "id": 2,
+      "surah": "At Takatsur",
+      "ayat": 5,
+      "arabic": "كَلَّا لَوْ تَعْلَمُونَ عِلْمَ الْيَقِينِ",
+      "translation": "Sekali-kali tidak! Seandainya kamu mengetahui dengan pasti",
+      "audioSrc": "/audio/at-takatsur-5.mp3"
+    },
+    {
+      "id": 3,
+      "surah": "An Naml",
+      "ayat": 10,
+      "arabic": "وَأَلْقِ عَصَاكَ فَلَمَّا رَآهَا تَهْتَزُّ كَأَنَّهَا جَانٌّ وَلَّى مُدْبِرًا وَلَمْ يُعَقِّبْ يَا مُوسَى لَا تَخَفْ إِنِّي لَا يَخَافُ لَدَيَّ الْمُرْسَلُونَ",
+      "translation": "Dan lemparkanlah tongkatmu. Maka ketika ia melihat tongkat itu bergerak seperti seekor ular, larilah ia berbalik ke belakang tanpa menoleh. Wahai Musa! Jangan takut! Sesungguhnya di hadapan-Ku, para rasul tidak perlu takut",
+      "audioSrc": "/audio/an-naml-10.mp3"
+    },
+    {
+      "id": 4,
+      "surah": "Al Baqarah",
+      "ayat": 255,
+      "arabic": "اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ ۚ لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ ۗ مَنْ ذَا الَّذِي يَشْفَعُ عِنْدَهُ إِلَّا بِإِذْنِهِ ۚ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ ۖ وَلَا يُحِيطُونَ بِشَيْءٍ مِنْ عِلْمِهِ إِلَّا بِمَا شَاءَ ۚ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ ۖ وَلَا يَئُودُهُ حِفْظُهُمَا ۚ وَهُوَ الْعَلِيُّ الْعَظِيمُ",
+      "translation": "Allah, tidak ada Tuhan selain Dia. Yang Mahahidup, Yang terus menerus mengurus (makhluk-Nya), tidak mengantuk dan tidak tidur. Milik-Nya apa yang ada di langit dan apa yang ada di bumi. Tidak ada yang dapat memberi syafaat di sisi-Nya tanpa izin-Nya. Dia mengetahui apa yang di hadapan mereka dan apa yang di belakang mereka, dan mereka tidak mengetahui sesuatu apa pun tentang ilmu-Nya melainkan apa yang Dia kehendaki. Kursi-Nya meliputi langit dan bumi. Dan Dia tidak merasa berat memelihara keduanya, dan Dia Mahatinggi, Mahabesar.",
+      "audioSrc": "/audio/al-baqarah-255.mp3"
+    },
+    {
+      "id": 5,
+      "surah": "Al Fatihah",
+      "ayat": 1,
+      "arabic": "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
+      "translation": "Dengan nama Allah Yang Maha Pengasih, Maha Penyayang",
+      "audioSrc": "/audio/al-fatihah-1.mp3"
+    },
+    {
+      "id": 6,
+      "surah": "Al Ikhlas",
+      "ayat": 1,
+      "arabic": "قُلْ هُوَ اللَّهُ أَحَدٌ",
+      "translation": "Katakanlah (Muhammad), \"Dialah Allah, Yang Maha Esa.\"",
+      "audioSrc": "/audio/al-ikhlas-1.mp3"
+    }
+  ]
+}
+

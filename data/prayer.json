@@ -1,0 +1,97 @@
+{
+  "chapters": [
+    {
+      "id": 1,
+      "title": "Bab Sholat",
+      "timeLimit": 300,
+      "steps": [
+        {
+          "id": 1,
+          "name": "Niat",
+          "description": "Berniat untuk melaksanakan sholat",
+          "image": "/images/niat.png"
+        },
+        {
+          "id": 2,
+          "name": "Takbiratul Ikram",
+          "description": "Mengangkat kedua tangan sejajar dengan telinga dan mengucapkan 'Allahu Akbar'",
+          "image": "/images/takbir.png"
+        },
+        {
+          "id": 3,
+          "name": "Bersedekap",
+          "description": "Meletakkan tangan kanan di atas tangan kiri di atas dada",
+          "image": "/images/sedekap.png"
+        },
+        {
+          "id": 4,
+          "name": "Ruku'",
+          "description": "Membungkukkan badan dengan tangan memegang lutut dan punggung lurus",
+          "image": "/images/ruku.png"
+        },
+        {
+          "id": 5,
+          "name": "Sujud",
+          "description": "Meletakkan dahi, hidung, kedua telapak tangan, kedua lutut, dan jari-jari kaki ke lantai",
+          "image": "/images/sujud.png"
+        },
+        {
+          "id": 6,
+          "name": "Tahiyat",
+          "description": "Duduk dengan kaki kanan tegak dan kaki kiri dilipat",
+          "image": "/images/tahiyat.png"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Bab Wudhu",
+      "timeLimit": 180,
+      "steps": [
+        {
+          "id": 1,
+          "name": "Niat",
+          "description": "Berniat untuk berwudhu",
+          "image": "/images/wudhu-niat.png"
+        },
+        {
+          "id": 2,
+          "name": "Membasuh Tangan",
+          "description": "Membasuh kedua tangan hingga pergelangan",
+          "image": "/images/wudhu-tangan.png"
+        },
+        {
+          "id": 3,
+          "name": "Berkumur",
+          "description": "Berkumur-kumur dan membersihkan hidung",
+          "image": "/images/wudhu-kumur.png"
+        },
+        {
+          "id": 4,
+          "name": "Membasuh Wajah",
+          "description": "Membasuh seluruh wajah",
+          "image": "/images/wudhu-wajah.png"
+        },
+        {
+          "id": 5,
+          "name": "Membasuh Tangan hingga Siku",
+          "description": "Membasuh tangan hingga siku",
+          "image": "/images/wudhu-lengan.png"
+        },
+        {
+          "id": 6,
+          "name": "Mengusap Kepala",
+          "description": "Mengusap sebagian kepala",
+          "image": "/images/wudhu-kepala.png"
+        },
+        {
+          "id": 7,
+          "name": "Membasuh Kaki",
+          "description": "Membasuh kaki hingga mata kaki",
+          "image": "/images/wudhu-kaki.png"
+        }
+      ]
+    }
+  ]
+}
+

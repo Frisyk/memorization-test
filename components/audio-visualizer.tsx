@@ -15,42 +15,6 @@ export default function AudioVisualizer({ audio, isPlaying }: AudioVisualizerPro
   const analyserRef = useRef<AnalyserNode | null>(null)
   const sourceRef = useRef<MediaElementAudioSourceNode | null>(null)
 
-  // useEffect(() => {
-  //   // Clean up previous audio context
-  //   if (audioContextRef.current) {
-  //     audioContextRef.current.close()
-  //     audioContextRef.current = null
-  //     analyserRef.current = null
-  //     sourceRef.current = null
-  //   }
-
-  //   if (!audio) return
-
-  //   // Create new audio context
-  //   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  //   const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)()
-  //   audioContextRef.current = audioContext
-
-  //   // Create analyzer
-  //   const analyser = audioContext.createAnalyser()
-  //   analyser.fftSize = 256
-  //   analyserRef.current = analyser
-
-  //   // Connect audio to analyzer
-  //   const source = audioContext.createMediaElementSource(audio)
-  //   source.connect(analyser)
-  //   analyser.connect(audioContext.destination)
-  //   sourceRef.current = source
-
-  //   return () => {
-  //     if (animationRef.current) {
-  //       cancelAnimationFrame(animationRef.current)
-  //     }
-  //     if (audioContextRef.current) {
-  //       audioContextRef.current.close()
-  //     }
-  //   }
-  // }, [audio])
 
   useEffect(() => {
   if (!audio) return
@@ -115,7 +79,7 @@ export default function AudioVisualizer({ audio, isPlaying }: AudioVisualizerPro
       ctx.fillStyle = "white"
       ctx.clearRect(0, 0, canvas.width, canvas.height)
 
-      const barWidth = (canvas.width / bufferLength) * 2.5
+      const barWidth = (canvas.width / bufferLength) * 10
       let x = 0
 
       for (let i = 0; i < bufferLength; i++) {
@@ -126,7 +90,7 @@ export default function AudioVisualizer({ audio, isPlaying }: AudioVisualizerPro
         ctx.fillRect(x, centerY - barHeight, barWidth, barHeight)
         ctx.fillRect(x, centerY, barWidth, barHeight)
 
-        x += barWidth + 1
+        x += barWidth + 2
       }
     }
 

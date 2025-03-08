@@ -9,37 +9,37 @@
           "id": 1,
           "name": "Niat",
           "description": "Berniat untuk melaksanakan sholat",
-          "image": "/images/niat.png"
+          "image": "https://images.unsplash.com/photo-1542473153-5ddb0c3b6d6d?q=80&w=800&auto=format&fit=crop"
         },
         {
           "id": 2,
           "name": "Takbiratul Ikram",
           "description": "Mengangkat kedua tangan sejajar dengan telinga dan mengucapkan 'Allahu Akbar'",
-          "image": "/images/takbir.png"
+          "image": "https://images.unsplash.com/photo-1513002749550-c59d786b8e6c?q=80&w=800&auto=format&fit=crop"
         },
         {
           "id": 3,
           "name": "Bersedekap",
           "description": "Meletakkan tangan kanan di atas tangan kiri di atas dada",
-          "image": "/images/sedekap.png"
+          "image": "https://images.unsplash.com/photo-1519817650390-64a93db51149?q=80&w=800&auto=format&fit=crop"
         },
         {
           "id": 4,
           "name": "Ruku'",
           "description": "Membungkukkan badan dengan tangan memegang lutut dan punggung lurus",
-          "image": "/images/ruku.png"
+          "image": "https://images.unsplash.com/photo-1580681681625-ded9d7f0b7b1?q=80&w=800&auto=format&fit=crop"
         },
         {
           "id": 5,
           "name": "Sujud",
           "description": "Meletakkan dahi, hidung, kedua telapak tangan, kedua lutut, dan jari-jari kaki ke lantai",
-          "image": "/images/sujud.png"
+          "image": "https://images.unsplash.com/photo-1591944834622-e5276a055d59?q=80&w=800&auto=format&fit=crop"
         },
         {
           "id": 6,
           "name": "Tahiyat",
           "description": "Duduk dengan kaki kanan tegak dan kaki kiri dilipat",
-          "image": "/images/tahiyat.png"
+          "image": "https://images.unsplash.com/photo-1552233707-a3185320d9a0?q=80&w=800&auto=format&fit=crop"
         }
       ]
     },
@@ -52,43 +52,166 @@
           "id": 1,
           "name": "Niat",
           "description": "Berniat untuk berwudhu",
-          "image": "/images/wudhu-niat.png"
+          "image": "https://images.unsplash.com/photo-1584108927686-0fdb3242d52a?q=80&w=800&auto=format&fit=crop"
         },
         {
           "id": 2,
           "name": "Membasuh Tangan",
           "description": "Membasuh kedua tangan hingga pergelangan",
-          "image": "/images/wudhu-tangan.png"
+          "image": "https://images.unsplash.com/photo-1605153864431-a2795e7959fc?q=80&w=800&auto=format&fit=crop"
         },
         {
           "id": 3,
           "name": "Berkumur",
           "description": "Berkumur-kumur dan membersihkan hidung",
-          "image": "/images/wudhu-kumur.png"
+          "image": "https://images.unsplash.com/photo-1620332372374-f108c53d2e03?q=80&w=800&auto=format&fit=crop"
         },
         {
           "id": 4,
           "name": "Membasuh Wajah",
           "description": "Membasuh seluruh wajah",
-          "image": "/images/wudhu-wajah.png"
+          "image": "https://images.unsplash.com/photo-1551772412-9d0890a1f70b?q=80&w=800&auto=format&fit=crop"
         },
         {
           "id": 5,
           "name": "Membasuh Tangan hingga Siku",
           "description": "Membasuh tangan hingga siku",
-          "image": "/images/wudhu-lengan.png"
+          "image": "https://images.unsplash.com/photo-1616699002805-0741e1e4a9c5?q=80&w=800&auto=format&fit=crop"
         },
         {
           "id": 6,
           "name": "Mengusap Kepala",
           "description": "Mengusap sebagian kepala",
-          "image": "/images/wudhu-kepala.png"
+          "image": "https://images.unsplash.com/photo-1585855368258-a1351681df19?q=80&w=800&auto=format&fit=crop"
         },
         {
           "id": 7,
           "name": "Membasuh Kaki",
           "description": "Membasuh kaki hingga mata kaki",
-          "image": "/images/wudhu-kaki.png"
+          "image": "https://images.unsplash.com/photo-1508387104394-d13e1b7f0f00?q=80&w=800&auto=format&fit=crop"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Rukun Islam",
+      "timeLimit": 240,
+      "steps": [
+        {
+          "id": 1,
+          "name": "Syahadat",
+          "description": "Mengucapkan dua kalimat syahadat sebagai pengakuan keimanan",
+          "image": "https://images.unsplash.com/photo-1564121211835-e88c852648ab?q=80&w=800&auto=format&fit=crop"
+        },
+        {
+          "id": 2,
+          "name": "Sholat",
+          "description": "Mendirikan sholat lima waktu sehari",
+          "image": "https://images.unsplash.com/photo-1581299894007-aaa50297cf16?q=80&w=800&auto=format&fit=crop"
+        },
+        {
+          "id": 3,
+          "name": "Zakat",
+          "description": "Membayar zakat bagi yang mampu",
+          "image": "https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?q=80&w=800&auto=format&fit=crop"
+        },
+        {
+          "id": 4,
+          "name": "Puasa",
+          "description": "Berpuasa di bulan Ramadhan",
+          "image": "https://images.unsplash.com/photo-1558998708-ed5f83a18674?q=80&w=800&auto=format&fit=crop"
+        },
+        {
+          "id": 5,
+          "name": "Haji",
+          "description": "Menunaikan ibadah haji bagi yang mampu",
+          "image": "https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?q=80&w=800&auto=format&fit=crop"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Akhlak dalam Islam",
+      "timeLimit": 300,
+      "steps": [
+        {
+          "id": 1,
+          "name": "Jujur",
+          "description": "Berkata dan bertindak dengan jujur dalam segala hal",
+          "image": "https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=800&auto=format&fit=crop"
+        },
+        {
+          "id": 2,
+          "name": "Sabar",
+          "description": "Bersabar dalam menghadapi ujian dan cobaan",
+          "image": "https://images.unsplash.com/photo-1499209974431-9dddcece7f88?q=80&w=800&auto=format&fit=crop"
+        },
+        {
+          "id": 3,
+          "name": "Ikhlas",
+          "description": "Melakukan segala sesuatu dengan niat yang tulus",
+          "image": "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?q=80&w=800&auto=format&fit=crop"
+        },
+        {
+          "id": 4,
+          "name": "Tawakal",
+          "description": "Berserah diri kepada Allah setelah berusaha",
+          "image": "https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=800&auto=format&fit=crop"
+        },
+        {
+          "id": 5,
+          "name": "Syukur",
+          "description": "Bersyukur atas segala nikmat yang diberikan",
+          "image": "https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3?q=80&w=800&auto=format&fit=crop"
+        },
+        {
+          "id": 6,
+          "name": "Rendah Hati",
+          "description": "Bersikap rendah hati dan tidak sombong",
+          "image": "https://images.unsplash.com/photo-1469571486292-b53601021a68?q=80&w=800&auto=format&fit=crop"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Sejarah Islam",
+      "timeLimit": 360,
+      "steps": [
+        {
+          "id": 1,
+          "name": "Masa Jahiliyah",
+          "description": "Kondisi masyarakat Arab sebelum kedatangan Islam",
+          "image": "https://images.unsplash.com/photo-1578895101408-1a6a6c6b8dd1?q=80&w=800&auto=format&fit=crop"
+        },
+        {
+          "id": 2,
+          "name": "Kelahiran Nabi Muhammad",
+          "description": "Nabi Muhammad SAW lahir pada tahun Gajah (570 M)",
+          "image": "https://images.unsplash.com/photo-1507608869274-d3177c8bb4c7?q=80&w=800&auto=format&fit=crop"
+        },
+        {
+          "id": 3,
+          "name": "Wahyu Pertama",
+          "description": "Turunnya wahyu pertama di Gua Hira",
+          "image": "https://images.unsplash.com/photo-1518001335271-e104b12fded9?q=80&w=800&auto=format&fit=crop"
+        },
+        {
+          "id": 4,
+          "name": "Hijrah ke Madinah",
+          "description": "Perpindahan umat Islam dari Mekah ke Madinah",
+          "image": "https://images.unsplash.com/photo-1565019011521-b0575cbb57c8?q=80&w=800&auto=format&fit=crop"
+        },
+        {
+          "id": 5,
+          "name": "Fathu Makkah",
+          "description": "Pembebasan kota Mekah oleh umat Islam",
+          "image": "https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?q=80&w=800&auto=format&fit=crop"
+        },
+        {
+          "id": 6,
+          "name": "Haji Wada'",
+          "description": "Haji perpisahan Nabi Muhammad SAW",
+          "image": "https://images.unsplash.com/photo-1540866225557-9e4214eb756a?q=80&w=800&auto=format&fit=crop"
         }
       ]
     }

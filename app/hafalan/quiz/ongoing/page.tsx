@@ -142,7 +142,7 @@ export default function OngoingQuizPage() {
 
   if (loading) {
     return (
-      <div className="max-w-md mx-auto bg-white min-h-screen p-4 flex items-center justify-center">
+      <div className="mx-auto bg-white min-h-screen p-4 flex items-center justify-center">
         <div className="text-center">
           <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
           <p className="text-lg">Memuat kuis...</p>
@@ -153,7 +153,7 @@ export default function OngoingQuizPage() {
 
   if (error) {
     return (
-      <div className="max-w-md mx-auto bg-white min-h-screen p-4 flex items-center justify-center">
+      <div className="mx-auto bg-white min-h-screen p-4 flex items-center justify-center">
         <div className="text-center">
           <div className="text-red-600 mb-4">⚠️</div>
           <p className="text-lg text-red-600 mb-4">{error}</p>

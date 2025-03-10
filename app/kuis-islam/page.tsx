@@ -182,7 +182,7 @@ export default function KuisIslamPage() {
   // Tambahkan tombol untuk menggunakan data fallback di halaman loading
   if (loading) {
     return (
-      <div className="max-w-md mx-auto bg-white min-h-screen p-4 flex items-center justify-center">
+      <div className="mx-auto bg-white min-h-screen p-4 flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="w-12 h-12 text-green-600 animate-spin mx-auto mb-4" />
           <p className="text-lg mb-4">{loadingMessage}</p>
@@ -254,7 +254,7 @@ export default function KuisIslamPage() {
   // Tambahkan tombol debug di halaman error
   if (error) {
     return (
-      <div className="max-w-md mx-auto bg-white min-h-screen p-4 flex items-center justify-center">
+      <div className="mx-auto bg-white min-h-screen p-4 flex items-center justify-center">
         <div className="text-center">
           <div className="text-red-600 mb-4">⚠️</div>
           <p className="text-lg text-red-600 mb-4">{error}</p>
@@ -290,7 +290,7 @@ export default function KuisIslamPage() {
   }
 
   return (
-    <div className="max-w-md mx-auto bg-white min-h-screen p-4">
+    <div className="mx-auto bg-white min-h-screen p-4">
       <div className="flex items-center justify-between mb-6">
         <BackButton />
         <h1 className="text-xl font-bold text-green-800 text-center flex-1">Kuis Islam</h1>

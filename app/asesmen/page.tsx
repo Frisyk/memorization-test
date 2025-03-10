@@ -71,7 +71,7 @@ export default function AsesmenPage() {
   };
 
   return (
-    <div className="max-w-md mx-auto bg-white min-h-screen p-4 relative">
+    <div className="mx-auto bg-white min-h-screen p-4 relative">
       <button className="absolute top-4 right-4 p-2 bg-gray-200 rounded-full" onClick={() => window.history.back()}>
         <X className="w-6 h-6 text-gray-800" />
       </button>
